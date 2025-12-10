@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    v-model="visible"
+    v-model="dialogVisible"
     :title="`信号详情 - ${signal?.code} ${signal?.name}`"
     width="600px"
     @closed="handleClosed"
