@@ -24,7 +24,7 @@ RUN (wget -O ta-lib-0.4.0-src.tar.gz https://github.com/mrjbq7/ta-lib/releases/d
     echo "TA-Lib installation failed, continuing without it..."
 
 # 安装Python依赖
-COPY requirements.txt .
+COPY requirements.txt requirements.simple.txt ./
 RUN pip install --no-cache-dir -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple || \
     (echo "Failed to install all requirements, trying without TA-Lib..." && \
      pip install --no-cache-dir -r requirements.simple.txt -i https://pypi.tuna.tsinghua.edu.cn/simple)
