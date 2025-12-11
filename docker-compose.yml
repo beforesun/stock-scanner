@@ -21,7 +21,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.simple
     container_name: stock-frontend
     volumes:
       - ./frontend/dist:/app/dist
@@ -32,7 +32,7 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.simple
     container_name: stock-backend
     ports:
       - "8000:8000"
@@ -57,7 +57,7 @@ services:
   scheduler:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.simple
     container_name: stock-scheduler
     environment:
       - DATABASE_URL=postgresql://stock_user:stock_pass@postgres:5432/stock_db
