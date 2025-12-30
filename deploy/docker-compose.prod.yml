@@ -19,25 +19,9 @@ services:
       - stock-network
     restart: unless-stopped
 
-  # 前端（生产构建）
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      args:
-        - NODE_ENV=production
-    container_name: stock-frontend-prod
-    volumes:
-      - ./frontend/dist:/app/dist
-    networks:
-      - stock-network
-    command: npm run build
-
-  # 后端API
+  # 后端API - 使用 GHCR 镜像
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: ghcr.io/beforesun/stock-scanner/backend:latest
     container_name: stock-backend-prod
     environment:
       - DATABASE_URL=postgresql://stock_user:${POSTGRES_PASSWORD}@postgres:5432/stock_db
@@ -48,7 +32,6 @@ services:
       - LOG_LEVEL=INFO
       - SECRET_KEY=${SECRET_KEY}
     volumes:
-      - ./backend:/app
       - ./data:/data
       - ./logs/backend:/app/logs
     depends_on:
@@ -61,18 +44,15 @@ services:
     restart: unless-stopped
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
 
-  # 定时任务服务
+  # 定时任务服务 - 使用 GHCR 镜像
   scheduler:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: ghcr.io/beforesun/stock-scanner/backend:latest
     container_name: stock-scheduler-prod
     environment:
       - DATABASE_URL=postgresql://stock_user:${POSTGRES_PASSWORD}@postgres:5432/stock_db
       - REDIS_URL=redis://redis:6379/0
       - LOG_LEVEL=INFO
     volumes:
-      - ./backend:/app
       - ./data:/data
       - ./logs/scheduler:/app/logs
     depends_on:
@@ -159,7 +139,5 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data:
-  redis_data:
   prometheus_data:
   grafana_data:
